@@ -60,7 +60,7 @@
 
                   
                     <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-                        PERPUSTAKAAN ONLINE
+                        Archel Ridzky's Library
                     </footer>
                 </div>
             </div>

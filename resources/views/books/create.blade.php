@@ -48,11 +48,11 @@
                             <x-select-input id="bookshelf" name="bookshelf_id" class="mt-1 block w-full" required>
                                 <option value="">Open this select menu</option>
                                 @foreach ($bookshelves as $key => $value)
-                                    @if (old('bookshelf_id') == $key)
-                                        <option value="{{ $key }}" selected>{{ $value }}</option>
-                                    @else
-                                        <option value="{{ $key }}" selected>{{ $value }}</option>
-                                    @endif
+                                @if (old('bookshelf_id') == $key)
+                                <option value="{{ $key }}" selected>{{ $value }}</option>
+                                @else
+                                <option value="{{ $key }}" selected>{{ $value }}</option>
+                                @endif
                                 @endforeach
                             </x-select-input>
                         </div>

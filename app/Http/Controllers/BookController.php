@@ -14,16 +14,19 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BookController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $data['books'] = Book::with('bookshelf')->get();
         return view('books.index', $data);
     }
 
-    public function create(){
-        $data['bookshelves'] = Bookshelf::pluck('name','id');
+    public function create()
+    {
+        $data['bookshelves'] = Bookshelf::pluck('name', 'id');
         return view('books.create', $data);
     }
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'title' => 'required',
             'author' => 'required',
@@ -33,7 +36,7 @@ class BookController extends Controller
             'bookshelf_id' => 'required',
             'cover' => 'required',
         ]);
-        if($request->hasFile('cover')){
+        if ($request->hasFile('cover')) {
             $path = $request->file('cover')->storeAs(
                 'public/cover_buku',
                 'cover_buku_' . time() . '.' . $request->file('cover')->extension()
@@ -48,13 +51,14 @@ class BookController extends Controller
         return redirect()->route('book')->with($notification);
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         // dd($id);
         $data['book'] = Book::findOrFail($id);
         $data['bookshelves'] = Bookshelf::pluck('name', 'id');
         return view('books.edit', $data);
     }
-    
+
     public function update(Request $request, $id)
     {
         $book = Book::findOrFail($id);
@@ -66,9 +70,9 @@ class BookController extends Controller
             'city' => 'required',
             'bookshelf_id' => 'required',
         ]);
-        if($request->hasFile('cover')){
-            if($book->cover != null){
-                Storage::delete('public/cover_buku/'. $book->cover);
+        if ($request->hasFile('cover')) {
+            if ($book->cover != null) {
+                Storage::delete('public/cover_buku/' . $book->cover);
             }
             $path = $request->file('cover')->storeAs(
                 'public/cover_buku',
@@ -85,9 +89,10 @@ class BookController extends Controller
         return redirect()->route('book')->with($notification);
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $book = Book::findOrFail($id);
-        Storage::delete('public/cover_buku/'. $book->cover);
+        Storage::delete('public/cover_buku/' . $book->cover);
         $book->delete();
         $notification = array(
             'message' => 'Data Buku Berhasil Dihapus',
@@ -96,17 +101,20 @@ class BookController extends Controller
         return redirect()->route('book')->with($notification);
     }
 
-    public function print(){
+    public function print()
+    {
         $data['books'] = Book::all();
         $pdf = Pdf::loadView('books.print', $data);
         return $pdf->stream('daftar_buku.pdf');
     }
 
-    public function export(){
+    public function export()
+    {
         return Excel::download(new BooksExport, 'dataBuku.xlsx');
     }
-    
-    public function import(Request $request){
+
+    public function import(Request $request)
+    {
         $request->validate([
             'file' => 'required'
         ]);
@@ -117,4 +125,4 @@ class BookController extends Controller
         );
         return redirect()->route('book')->with($notification);
     }
-}               
+}
